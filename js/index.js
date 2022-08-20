@@ -12,7 +12,7 @@ let level = 1;
 let house;
 
 let player;
-const platforms = [new Platform()];
+let platforms = [];
 
 const keys = {
   right: { pressed: false },
@@ -36,7 +36,7 @@ function keyPressed() {
     case 38: //up
       
       //problem: jump is accumulating
-      if (!keys.up.pressed)
+      if (overPlatform)
       player.velocity.y -= 15;
       keys.up.pressed = true;
       break;
@@ -74,6 +74,7 @@ function keyReleased() {
 function startGame() {
   createCanvas(1024, 576);
   player = new Player();
+  platforms = [new Platform(100,432,200),new Platform(-1,height-20,200)]
 
 }
 
@@ -120,15 +121,17 @@ function draw() {
   //     console.log("hola");
   //     sumT+=1;
   //   }
+  //   return sumT;
   // },0);
 
   const p = platforms.filter((platform) => platform.onPlatform==true);
   if (p.length>=1)
   {
-    overPlatform = 1;
+    overPlatform = true;
   }else{
-    overPlatform = 0;
+    overPlatform = false;
   }
+
 
   //console.log(overPlatform);
 }

@@ -1,8 +1,8 @@
 class Platform{
-    constructor(){
-        this.position = {x: 100, y: 432}
+    constructor(x,y,l){
+        this.position = {x, y}
         this.velocity = {x: 0, y: 0}
-        this.width = 200;
+        this.width = l;
         this.height = 20;
         this.color = "blue";
         this.onPlatform=false;
