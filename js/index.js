@@ -1,9 +1,9 @@
 let isLeft;
 let isRight;
 let isFalling;
-let isPlummeting;
+let overPlatform;
 let isJumping;
-let platformPos_y;
+//let platformPos_y;
 
 let game_score;
 let lives;
@@ -14,14 +14,15 @@ let house;
 let player;
 const platforms = [new Platform()];
 
-const keys = { right: { pressed: false }, left: { pressed: false } };
+const keys = {
+  right: { pressed: false },
+  left: { pressed: false },
+  up: { pressed: false },
+};
 
 function preload() {}
 
 function setup() {
-  createCanvas(1024, 576);
-  player = new Player();
-  //platforms = new Platform();
   startGame();
 }
 
@@ -32,62 +33,49 @@ function setup() {
 function keyPressed() {
   //console.log(keyCode);
   switch (keyCode) {
-    case 38:
-      //   console.log("up");
+    case 38: //up
+      
       //problem: jump is accumulating
-    //   if (player.velocity.y >= -20) {
-        player.velocity.y -= 20;
-        // console.log(player.velocity);
-    //   } else console.log("reached", player.velocity);
-
+      if (!keys.up.pressed)
+      player.velocity.y -= 15;
+      keys.up.pressed = true;
       break;
-    case 40:
-      //   console.log("down");
+    case 40: //down
       break;
-    case 37:
-      //   console.log("left");
+    case 37: //left
       keys.left.pressed = true;
       break;
-    case 39:
-      //console.log("right");
+    case 39: //right
       keys.right.pressed = true;
       break;
-    case 32:
-      //   console.log("space");
+    case 32: //space
       break;
   }
-  console.log(keys.right.pressed);
 }
 
 function keyReleased() {
   switch (keyCode) {
-    case 38:
-      //console.log("up");
-      //problem: jump is accumulating
-      //if (player.velocity.y >= -10) {
-      player.velocity.y += 20;
-      //  console.log(player.velocity);
-      //} else console.log("reached", player.velocity);
-
+    case 38: //up
+      keys.up.pressed = false;
       break;
-    case 40:
-      //console.log("down");
+    case 40: //down
       break;
-    case 37:
-      //   console.log("left");
+    case 37: //left
       keys.left.pressed = false;
       break;
-    case 39:
-      //console.log("right");
+    case 39: //right
       keys.right.pressed = false;
       break;
-    case 32:
-      //console.log("space");
+    case 32: //space
       break;
   }
 }
 
-function startGame() {}
+function startGame() {
+  createCanvas(1024, 576);
+  player = new Player();
+
+}
 
 function draw() {
   background(color(100, 155, 255));
@@ -116,12 +104,31 @@ function draw() {
   platforms.forEach((platform) => {
     if (
       player.position.y + player.height <= platform.position.y &&
-      player.position.y + player.height + player.velocity.y >=
-        platform.position.y &&
+      player.position.y + player.height + player.velocity.y >= platform.position.y && //
       player.position.x + player.width >= platform.position.x &&
       player.position.x <= platform.position.x + platform.width
     ) {
       player.velocity.y = 0;
+      platform.onPlatform=true;
+    }else{
+      platform.onPlatform=false;
     }
   });
+
+  // overPlatform = platforms.reduce((sumT,platform)=>{
+  //   if(platform.onPlatform){
+  //     console.log("hola");
+  //     sumT+=1;
+  //   }
+  // },0);
+
+  const p = platforms.filter((platform) => platform.onPlatform==true);
+  if (p.length>=1)
+  {
+    overPlatform = 1;
+  }else{
+    overPlatform = 0;
+  }
+
+  //console.log(overPlatform);
 }
