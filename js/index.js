@@ -132,6 +132,11 @@ function draw() {
     overPlatform = false;
   }
 
+  if(!overPlatform && player.position.y+player.height == height){
+    console.log("game over!");
+    startGame();
+  }
 
-  //console.log(overPlatform);
+
+  //console.log(overPlatform,Math.floor(player.position.y),height);
 }
