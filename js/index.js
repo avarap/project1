@@ -17,7 +17,7 @@ let platforms = [];
 const keys = {
   right: { pressed: false },
   left: { pressed: false },
-  up: { pressed: false },
+  //up: { pressed: false },
 };
 
 function preload() {}
@@ -38,7 +38,7 @@ function keyPressed() {
       //problem: jump is accumulating
       if (overPlatform)
       player.velocity.y -= 15;
-      keys.up.pressed = true;
+      
       break;
     case 40: //down
       break;
@@ -56,7 +56,6 @@ function keyPressed() {
 function keyReleased() {
   switch (keyCode) {
     case 38: //up
-      keys.up.pressed = false;
       break;
     case 40: //down
       break;
