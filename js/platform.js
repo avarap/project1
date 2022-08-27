@@ -1,14 +1,12 @@
-class Platform{
-    constructor(x,y,l){
-        this.position = {x, y}
-        this.velocity = {x: 0, y: 0}
-        this.width = l;
-        this.height = 20;
-        this.color = "blue";
-        this.onPlatform=false;
-    }
-    draw(){
-        fill(this.color);
-        rect(this.position.x, this.position.y, this.width, this.height);//, 20, 20, 5, 5
-    }
+class Platform extends Rectangle {
+  constructor(x, y, w = 100, h = 300, c = "blue", checkpoint=false) {
+    super(
+      x || Math.floor(random(0, width - w)),
+      y || Math.floor(random(0, height - player.h - h)),
+      w,
+      h,
+      c
+    );
+    this.checkPoint=checkpoint;
+  }
 }
