@@ -22,8 +22,20 @@ const keys = {
 
 function preload() {}
 
+function changeStyle(divID) {
+  let x = document.getElementById(divID);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
 function setup() {
   background(255);
+  if(gameStarted)
+  startGame()
+  else
   stopGame();
 }
 
@@ -39,24 +51,28 @@ function drawCloud({ x_pos, y_pos, size }) {
 }
 
 function startGame() {
-  let sketchCanvas = createCanvas(640, 480);
+  let sketchCanvas = createCanvas(innerWidth, innerHeight);
   player = new Player(25, 0, 50, 50);
   floorPos_y = height - 20;
+  if (!gameStarted) changeStyle("intro");
   gameStarted = true;
+
   gameStatus = "";
   platforms = [
     new Platform(100, height - 200, 200, 20),
+    new Platform(600, height - 200, 100, 20),
+    new Platform(1000, height - 200, 200, 20),
+    new Platform(1400, height - 200, 50, 20),
     new Platform(-1, height - 20, 500, 20, "green"),
-    new Platform(600, height - 20, 100, 20, "yellow", true),
+    new Platform(800, height - 20, 500, 20, "green"),
+    new Platform(1600, height - 20, 100, 20, "yellow", true),
   ];
 
   enemies = [
-    new Enemy(createVector(300, 200), 2 * PI),
-    //new ballNChain(createVector(300, 200), 2 * PI),
-    // new ballNChain(createVector(150, floorPos_y - 88), 2 * PI),
-    // new ballNChain(createVector(width - 50, floorPos_y + 30), 2 * PI),
-    // new ballNChain(createVector(450 + width, floorPos_y + 30), 2 * PI),
-    // new ballNChain(createVector(width * 2 + 200, floorPos_y - 167), 2 * PI),
+    new Enemy(createVector(310, height - 190), 2 * PI),
+    new Enemy(createVector(1000, height - 190), 2 * PI),
+    //new Enemy(createVector(1300, height - 20), PI),
+    
   ];
 
   clouds = [
@@ -89,18 +105,19 @@ function draw() {
     text(`Lives: ${lives}`, 20, 20);
 
     // Draw clouds
-    if (clouds) {
-      clouds.forEach((cloud) => {
-        drawCloud(cloud);
-        // Movement for clouds, whilst on the visible part of the stage
-        if (cloud.x_pos < 750 + width * 3) {
-          cloud.x_pos += 0.3;
-          // When clouds go off the visible part of the stage, their x_pos is set to the start of the stage
-        } else {
-          cloud.x_pos = 100 - width;
-        }
-      });
-    }
+    clouds.forEach((cloud) => {
+      drawCloud(cloud);
+      // Movement for clouds, whilst on the visible part of the stage
+      if (cloud.x_pos < 750 + width * 3) {
+        cloud.x_pos += 0.3;
+        // When clouds go off the visible part of the stage, their x_pos is set to the start of the stage
+      } else {
+        cloud.x_pos = 100 - width;
+      }
+    });
+
+    platforms.forEach((platform) => platform.draw());
+
     if (enemies) {
       // Draw ball n chains
       for (let i = 0; i < enemies.length; i++) {
@@ -119,7 +136,6 @@ function draw() {
       }
     }
 
-    platforms.forEach((platform) => platform.draw());
     player.draw();
 
     //ScrollWindow
@@ -139,7 +155,7 @@ function draw() {
     }
     //Loose
     if ((!player.isOnplatform() && player.y > height) || lives <= 0) {
-      if (lives - 1 > 0) {
+      if (lives > 0) {
         lives -= 1;
         startGame();
       } else {
